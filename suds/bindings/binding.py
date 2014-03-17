@@ -141,6 +141,11 @@ class Binding:
         @rtype: tuple ( L{Element}, L{Object} )
         """
         reply = self.replyfilter(reply)
+        try:
+            reply = reply[reply.index("<soap:Envelope"):reply.index("</soap:Envelope>")+16]
+        except:
+            pass
+        
         sax = Parser()
         replyroot = sax.parse(string=reply)
         plugins = PluginContainer(self.options().plugins)
