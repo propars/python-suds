@@ -190,7 +190,7 @@ class FileCache(Cache):
     def put(self, id, bfr):
         try:
             fn = self.__fn(id)
-            f = self.open(fn, 'w')
+            f = self.open(fn, 'wb')
             f.write(bfr)
             f.close()
             return bfr
@@ -223,7 +223,7 @@ class FileCache(Cache):
         try:
             fn = self.__fn(id)
             self.validate(fn)
-            return self.open(fn)
+            return self.open(fn,"rb")
         except:
             pass
 
@@ -244,12 +244,11 @@ class FileCache(Cache):
  
     def clear(self):
         for fn in os.listdir(self.location):
-            path = os.path.join(self.location, fn)
-            if os.path.isdir(path):
+            if os.path.isdir(fn):
                 continue
             if fn.startswith(self.fnprefix):
-                os.remove(path)
-                log.debug('deleted: %s', path)
+                log.debug('deleted: %s', fn)
+                os.remove(os.path.join(self.location, fn))
                 
     def purge(self, id):
         fn = self.__fn(id)
